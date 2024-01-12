@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishcount - Your Food Discounts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        section {
+            padding: 2em;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #couponCodeContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #couponResult {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #amountToPay {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        #followUs {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #followUs a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        #dishcountLogo {
+            margin-top: 10px;
+            max-width: 30px;
+            height: auto;
+        }
+
+        #instruction {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Dishcount</h1>
+        <p>Your Go-To Place for Delicious Discounts</p>
+    </header>
+
+    <section>
+        <h2>Get Started</h2>
+        <p>Enter your Instagram username and the amount of your purchase to generate your unique coupon code!</p>
+        <div id="couponCodeContainer">
+            <input type="text" id="usernameInput" placeholder="Your Instagram Username" required>
+            <input type="number" id="amountInput" placeholder="Purchase Amount" required>
+            <button onclick="generateCouponCode()">Generate Coupon</button>
+            <div id="couponResult"></div>
+            <p id="amountToPay"></p>
+            <div id="followUs">
+                <a id="followLink" href="#" target="_blank">
+                    <img id="dishcountLogo" src="https://th.bing.com/th/id/OIP.mdNMeNAxQL1gWv0U3KAe1gHaHZ?rs=1&pid=ImgDetMain" alt="Instagram Logo">
+                    Dishcount
+                </a>
+            </div>
+            <p id="instruction">
+                To avail the discount:
+                <ol>
+                    <li>Follow our Instagram account.</li>
+                    <li>Show the generated coupon code to the vendor.</li>
+                    <li>Enjoy the discount on your purchase (if applicable).</li>
+                </ol>
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Dishcount. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Get location and store from the URL
+        var locationFromUrl = getParameterByName('location');
+        var storeFromUrl = getParameterByName('store');
+
+        // Set the follow link dynamically
+        var followLink = document.getElementById('followLink');
+        followLink.href = 'https://www.instagram.com/' + locationFromUrl + '-' + storeFromUrl;
+        // Set the follow link dynamically
+        var followLink = document.getElementById('followLink');
+        followLink.href = 'https://www.instagram.com/' + locationFromUrl + '-' + storeFromUrl;
+
+        function generateCouponCode() {
+            var username = document.getElementById('usernameInput').value;
+            var amount = parseFloat(document.getElementById('amountInput').value);
+
+            if (!username || isNaN(amount)) {
+                // Display an error message if username or amount is not provided
+                alert('Please enter both your Instagram username and purchase amount.');
+                return;
+            }
+
+            var discountPercentage = amount >= 200 ? 10 : 0;
+            var discountedAmount = amount - (amount * discountPercentage / 100);
+            var couponCode = locationFromUrl + '-' + storeFromUrl + '-' + username;
+
+            if (amount < 200) {
+                // Display the amount and encourage the user to buy above 200
+                document.getElementById('amountToPay').innerHTML = 'Total Amount: ₹' + amount.toFixed(2) +
+                    '<br>Purchase more to enjoy a 10% discount!';
+            } else {
+                // Display the coupon code result in a box
+                document.getElementById('couponResult').innerHTML = 'Your Coupon Code: <span style="color: white;">' + couponCode + '</span>';
+
+                // Show the amount to pay after discount in rupees
+                document.getElementById('amountToPay').innerText = 'Amount after Discount: ₹' + discountedAmount.toFixed(2);
+
+                // Show the "Follow Us" section
+                document.getElementById('followUs').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
