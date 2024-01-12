@@ -95,7 +95,7 @@
             <div id="couponResult"></div>
             <p id="amountToPay"></p>
             <div id="followUs">
-                <a id="followLink" href="#" target="_blank">
+                <a href="https://www.instagram.com/ankit_spidyrate/" target="_blank">
                     <img id="dishcountLogo" src="https://th.bing.com/th/id/OIP.mdNMeNAxQL1gWv0U3KAe1gHaHZ?rs=1&pid=ImgDetMain" alt="Instagram Logo">
                     Dishcount
                 </a>
@@ -115,28 +115,9 @@
         <p>&copy; 2024 Dishcount. All rights reserved.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/canvas-confetti.min.js"></script>
     <script>
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        // Get location and store from the URL
-        var locationFromUrl = getParameterByName('location');
-        var storeFromUrl = getParameterByName('store');
-
-        // Set the follow link dynamically
-        var followLink = document.getElementById('followLink');
-        followLink.href = 'https://www.instagram.com/' + locationFromUrl + '-' + storeFromUrl;
-        // Set the follow link dynamically
-        var followLink = document.getElementById('followLink');
-        followLink.href = 'https://www.instagram.com/' + locationFromUrl + '-' + storeFromUrl;
-
         function generateCouponCode() {
             var username = document.getElementById('usernameInput').value;
             var amount = parseFloat(document.getElementById('amountInput').value);
@@ -149,7 +130,12 @@
 
             var discountPercentage = amount >= 200 ? 10 : 0;
             var discountedAmount = amount - (amount * discountPercentage / 100);
-            var couponCode = locationFromUrl + '-' + storeFromUrl + '-' + username;
+            
+            // Use environment variables for location and store names
+            var location = process.env.LOCATION || "PAT"; // Replace with the actual location abbreviation
+            var storeName = process.env.STORE || "KFC"; // Replace with the actual store name
+
+            var couponCode = location + '-' + storeName + '-' + username;
 
             if (amount < 200) {
                 // Display the amount and encourage the user to buy above 200
@@ -161,6 +147,9 @@
 
                 // Show the amount to pay after discount in rupees
                 document.getElementById('amountToPay').innerText = 'Amount after Discount: ₹' + discountedAmount.toFixed(2);
+
+                // Show the encouragement message
+                document.getElementById('amountToPay').innerHTML += '<br>Congratulations on your 10% discount!';
 
                 // Show the "Follow Us" section
                 document.getElementById('followUs').style.display = 'block';
